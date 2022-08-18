@@ -6,7 +6,7 @@ env:
   GIT_COMMIT: ${{ github.sha }}
 jobs:
   clone:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     container: gradle:6-jdk11
     steps:
       - name: Checkout
@@ -18,7 +18,7 @@ jobs:
           path: .
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     container: gradle:6-jdk11
     needs:
       - clone
@@ -37,7 +37,7 @@ jobs:
           path: .
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     container: gradle:6-jdk11
     needs:
       - clone
@@ -51,7 +51,7 @@ jobs:
         run: chmod +x ci/unit-test-app.sh && ci/unit-test-app.sh
 
   component-test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - push-docker-hub
     steps:
@@ -64,7 +64,7 @@ jobs:
         run: chmod +x ci/component-test.sh && GIT_COMMIT="GA-$GITHUB_SHA" && ci/component-test.sh
 
   performance-test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - push-docker-hub
     steps:
@@ -77,7 +77,7 @@ jobs:
         run: chmod +x ci/performance-test.sh && GIT_COMMIT="GA-$GITHUB_SHA" && ci/performance-test.sh
 
   push-docker-hub:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: [ Build,Test ]
     steps:
       - name: Download code
